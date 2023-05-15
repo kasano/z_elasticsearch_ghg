@@ -31,3 +31,13 @@ if __name__ == '__main__':
     es.print_results(res)
     
 # python main.py localhost 9200 my_index '{"query": {"match_all": {}}}'
+
+#####
+
+# from elasticsearch_dsl import Search
+# s = Search(using=Elasticsearch('localhost:9200') ).filter("term").query("match")
+# s.execute()
+
+# https://zc-dev-deploy.es.asia-southeast1.gcp.elastic-cloud.com
+
+# https://zc-dev-deploy.ent.asia-southeast1.gcp.elastic-cloud.com

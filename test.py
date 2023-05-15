@@ -1,4 +1,3 @@
-# Write a test suite for the class you wrote in the previous question.
 # The test suite should test the following:
 # 1. The class can connect to an Elasticsearch database
 # 2. The class can query the database
