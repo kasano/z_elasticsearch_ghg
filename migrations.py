@@ -1,14 +1,6 @@
 from pandas import read_csv
 from elasticsearch import Elasticsearch
-
-ELASTIC_PASSWORD = ""
-
-CLOUD_ID = ""
-
-client = Elasticsearch(
-    cloud_id=CLOUD_ID,
-    basic_auth=("elastic", ELASTIC_PASSWORD)
-)
+import sys
 
 def prepare_es_data(index, doc_type, df):
   records = df.to_dict(orient="records")
@@ -39,12 +31,19 @@ def index_es_data(index, es_data,es_client):
   res = es_client.bulk(index=index, body=es_data, refresh = True)
   print("Errors: {}, Num of records indexed: {}".format(res["errors"], len(res["items"])))
   
-df = read_csv('factors.csv',header='infer',index_col=False,low_memory=False)
 
-df_migrate = df[
-    (df['Gas']=='CARBON DIOXIDE')
-][['Description']].reset_index(drop=True)
-
-train_es_data = prepare_es_data(index="development", doc_type="ghg", df=df_migrate)
-
-index_es_data(index="development", es_data=train_es_data, es_client=client )
+if __name__ == '__main__':
+    ELASTIC_PASSWORD = sys.argv[1]
+    CLOUD_ID = sys.argv[2]
+    client = Elasticsearch(
+      cloud_id=CLOUD_ID,
+      basic_auth=("elastic", ELASTIC_PASSWORD)
+    )
+    df = read_csv('factors.csv',header='infer',index_col=False,low_memory=False)
+    df_migrate = df[
+       (df['Gas']=='CARBON DIOXIDE')
+    ][['Description']].reset_index(drop=True)
+    
+    train_es_data = prepare_es_data(index="development", doc_type="ghg", df=df_migrate)
+    
+    index_es_data(index="development", es_data=train_es_data, es_client=client )
