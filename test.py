@@ -9,12 +9,12 @@ from main import ElasticSearch
 
 class TestElasticSearch(unittest.TestCase):
     def set_up(self):
-        self.es = ElasticSearch(cloud_id='cloud_id',basic_auth=("elastic", '<password>'))
+        self.es = ElasticSearch(cloud_id='cloud_id',secret=('<password>'))
         self.index = 'development'
-        self.query = '{"ids" : {"values" : ["1", "4", "100"]}}'
+        self.query = 'mangrove'
         
     def test_query(self):
-        res = self.es.search(index=self.index, query=self.query)
+        res = self.es.query(index=self.index, query=self.query,n_return=3)
         self.assertEqual(res['hits']['total']['value'], 3)
         
     # def test_print_results(self):

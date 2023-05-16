@@ -33,7 +33,7 @@ if __name__ == '__main__':
     index = sys.argv[3]
     query = sys.argv[4]
     es = ElasticSearch(cloud_id, secret)
-    res = es.query(index, query)
+    res = es.query(index, query,3)
     es.print_results(res)
     
 # python main.py <cloud_id> <pw> development mangrove
