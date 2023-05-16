@@ -13,13 +13,16 @@ class ElasticSearch:
         self.port = port
         self.es = Elasticsearch([{'host': self.host, 'port': self.port}])
 
-    def query(self, index, query):
-        res = self.es.search(index=index, body=query)
-        return res
+    def query(self, index, query,n_return):
+        # res = self.es.search(index=index, body=query)
+        result = self.es.search(index=index, query={"fuzzy": {"Description": {"value": query}}} )
+        result_length = len(result.body['hits']['hits'])
+        return result.body['hits']['hits'][0:min( result_length,n_return )]
     
     def print_results(self, res):
-        for hit in res['hits']['hits']:
-            print(json.dumps(hit['_source'], indent=4))
+        for hit in res:
+            print( {'emission_factors': [ hit['_source']['Description'] ] }  )
+            # print(json.dumps(hit['_source'], indent=4))
                 
 if __name__ == '__main__':
     host = sys.argv[1]
@@ -31,13 +34,3 @@ if __name__ == '__main__':
     es.print_results(res)
     
 # python main.py localhost 9200 my_index '{"query": {"match_all": {}}}'
-
-#####
-
-# from elasticsearch_dsl import Search
-# s = Search(using=Elasticsearch('localhost:9200') ).filter("term").query("match")
-# s.execute()
-
-# https://zc-dev-deploy.es.asia-southeast1.gcp.elastic-cloud.com
-
-# https://zc-dev-deploy.ent.asia-southeast1.gcp.elastic-cloud.com
